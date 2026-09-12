@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+renders/
+*.blend
+*.blend1
+node_modules/
+web/dist/
+.pnpm-store/

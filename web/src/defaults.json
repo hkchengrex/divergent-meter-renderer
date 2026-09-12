@@ -1,0 +1,54 @@
+{
+  "reading": "1.097302",
+  "width": 3840,
+  "height": 2160,
+  "samples": 96,
+  "brightness": 18.0,
+  "glow_color": [
+    1.0,
+    0.115,
+    0.008
+  ],
+  "exposure": 0.0,
+  "bloom": true,
+  "bloom_threshold": 1.4,
+  "camera_position": [
+    0.0,
+    -15.0,
+    4.65
+  ],
+  "camera_target": [
+    0.0,
+    0.0,
+    1.13
+  ],
+  "camera_type": "ORTHO",
+  "camera_scale": null,
+  "focal_length": 50.0,
+  "reflection": 0.0,
+  "floor_roughness": 1.0,
+  "glass_roughness": 0.085,
+  "glass_reflection": 0.22,
+  "glass_ior": 1.46,
+  "base_roughness": 0.17,
+  "studio_brightness": 0.0,
+  "studio_position": [
+    -4.0,
+    -3.0,
+    6.0
+  ],
+  "studio_target": [
+    0.0,
+    0.0,
+    1.0
+  ],
+  "studio_color": [
+    1.0,
+    0.85,
+    0.65
+  ],
+  "studio_size": 5.0,
+  "studio_size_y": 2.0,
+  "ambient_brightness": 0.0,
+  "seed": 0
+}

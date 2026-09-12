@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nixie-renderer"
+version = "0.2.0"
+description = "Configurable procedural Nixie tube renders with Python and Blender"
+requires-python = ">=3.10"
+readme = "README.md"
+dependencies = []
+
+[project.scripts]
+nixie-render = "nixie_renderer.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["nixie_renderer*"]
+
+[tool.setuptools.package-data]
+nixie_renderer = ["data/*.json"]

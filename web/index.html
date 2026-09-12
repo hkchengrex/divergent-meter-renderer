@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101314">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23191d1e'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='44' fill='%23e5a266'%3E.%3C/text%3E%3C/svg%3E">
+  <meta name="description" content="Compose a Nixie-tube scene in your browser, then render the same settings in Blender.">
+  <title>Divergent Meter · Scene editor</title>
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">[ . ]</span><span>Divergent Meter<small>Scene editor</small></span></a>
+    <nav aria-label="Project"><a href="https://github.com/hkchengrex/divergent-meter-renderer#readme" target="_blank" rel="noreferrer">Guide ↗</a><button id="import">Import settings</button><input type="file" id="file" accept="application/json,.json" hidden></nav>
+  </header>
+  <main class="workspace">
+    <aside class="controls" aria-label="Scene controls">
+      <form id="settings" novalidate>
+        <section class="reading-section"><label for="reading">World line</label><input id="reading" name="reading" value="1.097302" spellcheck="false" autocomplete="off" inputmode="decimal" maxlength="64"><p class="hint">Each character has its own tube.</p><div class="preset-row"><button type="button" id="reset">Reset scene</button></div></section>
+        <div id="fields"></div>
+      </form>
+    </aside>
+    <div class="stage-column">
+      <section class="preview" aria-label="Interactive scene preview">
+        <div class="preview-bar"><span><i class="status-dot"></i>Live preview</span><span id="aspect-label">16:9</span></div>
+        <div id="viewport"><div id="frame"><canvas id="scene" aria-label="3D Nixie meter. Drag to orbit, scroll to zoom." tabindex="0"></canvas></div><div id="loading">Building the tubes…</div></div>
+        <div class="preview-footer"><span>Drag to orbit · scroll to zoom</span><button id="reset-camera">Reset view</button><button id="preview-png">Save preview PNG</button></div>
+      </section>
+      <p id="error" class="error" role="alert" hidden></p><p id="status" class="status" role="status" aria-live="polite"></p>
+      <section class="export-panel" aria-labelledby="export-heading">
+        <div class="export-title"><h2 id="export-heading">Re-render in high quality with Blender. <a href="https://github.com/hkchengrex/divergent-meter-renderer#requirements-and-installation" target="_blank" rel="noreferrer">Guide ↗</a></h2><button id="copy" class="primary">Copy command</button></div>
+        <label class="sr-only" for="command">Blender render command</label><textarea id="command" readonly rows="3" spellcheck="false"></textarea>
+        <div class="export-bottom"><button id="json">Download settings JSON</button><span id="render-size">3840 × 2160 · 96 samples</span></div>
+        <details class="fidelity"><summary>How closely will the render match?</summary><p>Both renderers use the same numeral paths, tube profile, cathode depths, dot position, camera coordinates, and settings. The browser approximates the glow lighting, glass refraction, floor reflections, and bloom. Blender calculates light bouncing through the scene, so highlights and brightness can differ. Samples and seed affect the Blender render only.</p><p>Use a small Blender render to check the look before rendering at full resolution. The preview PNG is the browser image; the command produces the Blender version.</p></details>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer"><span>Python + Blender / JavaScript + Three.js</span></footer>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

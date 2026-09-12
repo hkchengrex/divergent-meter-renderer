@@ -1,0 +1,19 @@
+{
+  "reading": "1.097302",
+  "width": 1920,
+  "height": 1080,
+  "samples": 64,
+  "camera_position": [3, -15, 5],
+  "camera_target": [0, 0, 0.7],
+  "camera_scale": 10.5,
+  "reflection": 0.7,
+  "floor_roughness": 0.08,
+  "glass_roughness": 0.08,
+  "glass_reflection": 0.3,
+  "brightness": 18,
+  "studio_brightness": 60,
+  "studio_position": [-4, -3, 6],
+  "studio_target": [0, 0, 1],
+  "studio_size": 5,
+  "studio_size_y": 2
+}
