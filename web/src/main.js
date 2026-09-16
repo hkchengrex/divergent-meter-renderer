@@ -151,10 +151,16 @@ $('file').onchange = async () => {
 };
 $('preview-png').onclick = async () => {
   if (invalid) return;
-  try { $('preview-png').disabled = true; status('Saving preview…'); download(await meter.png(), `nixie-${state.reading}.png`); status('Browser preview saved.'); }
+  try { $('preview-png').disabled = true; error(''); status('Saving preview…'); download(await meter.png(), `nixie-${state.reading}.png`); status('Browser preview saved.'); }
   catch (e) { error(e.message); }
   finally { $('preview-png').disabled = invalid; }
 };
+$('high-quality').onchange = () => meter?.setQuality($('high-quality').checked, text => {
+  $('quality-status').textContent = text;
+  $('high-quality').checked = meter.highQuality;
+  $('aspect-label').textContent = meter.highQuality ? `${meter.width} × ${meter.height} preview` : `${state.width} × ${state.height}`;
+  $('preview-png').title = meter.highQuality ? 'Save the accumulated image at preview resolution' : 'Save at the chosen output resolution';
+});
 
 try {
   const saved = localStorage.getItem('nixie-settings-v1'); if (saved) state = validateSettings(JSON.parse(saved));

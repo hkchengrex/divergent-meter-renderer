@@ -10,3 +10,5 @@
 .export-title{margin-bottom:18px}.export-title h2{font:15px/1.6 'Segoe UI',sans-serif;margin:0}.export-title h2 a{margin-left:6px;white-space:nowrap}
 
 .common-controls{padding-top:22px}.advanced-controls{border-top:1px solid var(--line)}.advanced-controls>summary{cursor:pointer;padding:18px 0;font-weight:600;color:var(--text)}.advanced-controls>.control-group:first-of-type{border-top:0}
+
+.quality-toggle{display:flex;align-items:center;gap:7px;margin-left:auto;cursor:pointer;white-space:nowrap}.quality-toggle input{accent-color:var(--copper)}@media(max-width:620px){.preview-bar{flex-wrap:wrap}.preview-bar>#aspect-label{display:none}}

@@ -21,7 +21,7 @@
     </aside>
     <div class="stage-column">
       <section class="preview" aria-label="Interactive scene preview">
-        <div class="preview-bar"><span><i class="status-dot"></i>Live preview</span><span id="aspect-label">16:9</span></div>
+        <div class="preview-bar"><span><i class="status-dot"></i><span id="quality-status" role="status">Live preview</span></span><label class="quality-toggle" title="GPU path tracing. The first shader compilation can take a while; the image refines when you stop editing."><input id="high-quality" type="checkbox"> High quality</label><span id="aspect-label">16:9</span></div>
         <div id="viewport"><div id="frame"><canvas id="scene" aria-label="3D Nixie meter. Drag to orbit, scroll to zoom." tabindex="0"></canvas></div><div id="loading">Building the tubes…</div></div>
         <div class="preview-footer"><span>Drag to orbit · scroll to zoom</span><button id="reset-camera">Reset view</button><button id="preview-png">Save preview PNG</button></div>
       </section>
@@ -30,7 +30,7 @@
         <div class="export-title"><h2 id="export-heading">Re-render in high quality with Blender. <a href="https://github.com/hkchengrex/divergent-meter-renderer#requirements-and-installation" target="_blank" rel="noreferrer">Guide ↗</a></h2><button id="copy" class="primary">Copy command</button></div>
         <label class="sr-only" for="command">Blender render command</label><textarea id="command" readonly rows="3" spellcheck="false"></textarea>
         <div class="export-bottom"><button id="json">Download settings JSON</button><span id="render-size">3840 × 2160 · 96 samples</span></div>
-        <details class="fidelity"><summary>How closely will the render match?</summary><p>Both renderers use the same numeral paths, tube profile, cathode depths, dot position, camera coordinates, and settings. The browser approximates the glow lighting, glass refraction, floor reflections, and bloom. Blender calculates light bouncing through the scene, so highlights and brightness can differ. Samples and seed affect the Blender render only.</p><p>Use a small Blender render to check the look before rendering at full resolution. The preview PNG is the browser image; the command produces the Blender version.</p></details>
+        <details class="fidelity"><summary>How closely will the render match?</summary><p>Both renderers share the numeral paths, tube profile, cathode depths, dot position, camera coordinates, and settings. High quality traces light through the scene; the fast preview approximates it. Materials, glow, and denoising still differ from Blender. Samples and seed affect the Blender render only.</p><p>High-quality PNGs save the accumulated image at preview resolution. Use the Blender command for a final render at your chosen output size.</p></details>
       </section>
     </div>
   </main>

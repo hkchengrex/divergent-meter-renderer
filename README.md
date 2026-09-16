@@ -20,7 +20,7 @@ The [browser editor](https://hkchengrex.com/divergent-meter-renderer/) runs loca
 
 1. Enter a reading and adjust the glow, materials, or studio light.
 2. Drag the preview to orbit, and scroll to zoom. The camera controls update with your view.
-3. Set the output resolution and select **Copy Blender command**.
+3. Set the output resolution and select **Copy command**.
 4. Run the command in a terminal after installing the Python renderer below and setting `BLENDER_PATH`.
 
 You can also select **Download settings JSON** and render it with:
@@ -31,11 +31,15 @@ nixie-render --config nixie-settings.json --output renders/nixie
 
 Use **Import settings** to load a configuration from the Python renderer or a previous browser session. **Save preview PNG** downloads the browser image at the selected output resolution, subject to your device's graphics limits.
 
+Enable **High quality** for progressive GPU path tracing. The image refines up to 1,024 samples when you stop editing; moving the camera or changing settings returns to the fast preview and restarts refinement. Initial shader compilation can take tens of seconds or longer depending on your GPU and browser. Denoising reduces grain while the image converges.
+
+In high-quality mode, **Save preview PNG** saves the accumulated image at the preview size shown above it. Use the Blender command for a final render at the selected output resolution.
+
 ### What carries over?
 
 Both renderers use the same numeral paths, glass profile, cathode depth order, bottom-right dot position, and spacing. Camera coordinates, framing, and every exported setting use the Python renderer's conventions. The Blender renderer remains available independently through its CLI and Python API.
 
-The browser provides an interactive approximation of the final look. It uses local lights to approximate light emitted by the cathodes, and screen-space effects for glass and floor reflections. Blender calculates light transport with Cycles, so the final highlights, refraction, glow, and reflection softness can differ. Preview calibration does not change the exported settings. Samples and seed affect Blender only.
+The fast preview uses local lights to approximate light emitted by the cathodes, and screen-space effects for glass and floor reflections. High-quality mode traces light through glass with actual wall thickness and uses the glowing cathodes themselves as light sources. It is closer to Blender's lighting, but materials, denoising, and glow still differ from Cycles; fine detail can look softer. Preview calibration does not change exported settings. The samples and seed fields affect Blender only.
 
 For a quick final-look check, render the downloaded settings at a smaller size:
 

@@ -57,7 +57,7 @@ function createGeometry() {
 
 export class MeterRenderer {
   constructor(canvas, frame, onCameraChange, onError) {
-    this.canvas = canvas; this.frame = frame; this.onCameraChange = onCameraChange;
+    this.canvas = canvas; this.frame = frame; this.onCameraChange = onCameraChange; this.onError = onError;
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
     this.renderer.setPixelRatio(1); this.renderer.toneMapping = THREE.AgXToneMapping;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -150,6 +150,7 @@ export class MeterRenderer {
   }
 
   apply(c) {
+    this.pathSceneDirty = true;
     if (!this.config || this.config.reading !== c.reading) this.rebuild(c.reading);
     this.config = structuredClone(c);
     const m = this.materials;
@@ -201,12 +202,57 @@ export class MeterRenderer {
   }
 
   requestRender() {
+    this.refineAfter = performance.now() + 650;
+    this.canvas.dataset.samples = '0';
+    this.path?.show(false); this.pathCameraDirty = true;
     if (this.pending || this.lost) return;
-    this.pending = requestAnimationFrame(() => { this.pending = null; this.composer.render(); this.canvas.dataset.ready = 'true'; });
+    this.pending = requestAnimationFrame(() => this.draw());
+  }
+
+  async setQuality(enabled, onProgress) {
+    this.onProgress = onProgress; this.highQuality = enabled;
+    if (enabled && !this.path) {
+      onProgress('Loading renderer…');
+      try {
+        const { PathPreview } = await import('./path-preview.js');
+        if (!this.highQuality) return;
+        this.path = new PathPreview(this); this.pathSceneDirty = true;
+      } catch (e) { this.highQuality = false; this.onError(`High-quality rendering unavailable: ${e.message}`); }
+    }
+    this.requestRender();
+  }
+
+  draw() {
+    this.pending = null;
+    if (this.lost) return;
+    try {
+      if (this.highQuality && this.path && performance.now() >= this.refineAfter) {
+        if (this.pathSceneDirty) { this.path.setScene(); this.pathSceneDirty = false; this.pathCameraDirty = false; }
+        else if (this.pathCameraDirty) { this.path.resetCamera(); this.pathCameraDirty = false; }
+        if (this.path.tracer.samples < 1024) this.path.render();
+        const samples = Math.floor(this.path.tracer.samples);
+        this.canvas.dataset.samples = samples;
+        this.onProgress?.(this.path.tracer.isCompiling ? 'Preparing renderer…' : `${samples} / 1024 samples`);
+      } else {
+        this.path?.show(false); this.composer.render();
+        this.onProgress?.(this.highQuality ? 'Preview · refining when idle' : 'Live preview');
+      }
+      this.canvas.dataset.ready = 'true';
+      if (this.highQuality && (!this.path || this.pathSceneDirty || this.pathCameraDirty || this.path.tracer.samples < 1024)) this.pending = requestAnimationFrame(() => this.draw());
+    } catch (e) {
+      this.highQuality = false; this.path?.show(false); this.onError(`High-quality rendering stopped: ${e.message}`);
+      this.onProgress?.('Live preview');
+      this.composer.render();
+    }
   }
 
   async png() {
     if (this.lost) throw Error('Reload the page to restore the preview before saving a PNG.');
+    if (this.highQuality && !this.path?.pass.enabled) throw Error('Wait for the first high-quality sample before saving.');
+    if (this.highQuality && this.path?.pass.enabled) {
+      // Save the accumulated image without resetting it to a noisy first sample.
+      return new Promise((resolve, reject) => this.canvas.toBlob(blob => blob ? resolve(blob) : reject(Error('PNG export failed.')), 'image/png'));
+    }
     const { width, height } = this.config;
     const max = this.renderer.capabilities.maxTextureSize;
     if (width > max || height > max || width * height > 16777216) throw Error('This preview export is too large for the browser. Use the Blender command, or choose a smaller output size.');
